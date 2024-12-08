@@ -1,11 +1,29 @@
-import React, { useContext } from "react";
-import "./Cart.css";
+// 1. Thư viện bên ngoài
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+// 2. Module cục bộ
 import { StoreContext } from "../../context/StoreContext";
-import {useNavigate} from 'react-router-dom'
+
+// 3. File CSS và asset
+import "./Cart.css";
+
 function Cart() {
-  const { cartItems, food_list, removeFromCart, getTotalCartAmount } =
+  const { cartItems, food_list, getTotalCartAmount, updateQuantity } =
     useContext(StoreContext);
   const navigate = useNavigate();
+  const SHIPPING_FEE = 2;
+
+  const handleRemoveItem = (itemId) => {
+    updateQuantity(itemId, 0); // Remove item by setting quantity to 0
+  };
+
+  const handleUpdateQuantity = (itemId, newQuantity) => {
+    if (newQuantity >= 0) {
+      updateQuantity(itemId, newQuantity); // Update item quantity
+    }
+  };
+
   return (
     <div className="cart">
       <div className="cart-items">
@@ -15,23 +33,52 @@ function Cart() {
           <p>Price</p>
           <p>Quantity</p>
           <p>Total</p>
-          <p>Remove</p>
+          <p>Actions</p>
         </div>
         <br />
         <hr />
-        {food_list.map((item, index) => {
+        {food_list.map((item) => {
           if (cartItems[item._id] > 0) {
             return (
-              <div>
+              <div key={item._id}>
                 <div className="cart-items-title cart-items-item">
-                  <img src={item.image} />
+                  <img src={item.image} alt={item.name} />
                   <p>{item.name}</p>
                   <p>${item.price}</p>
                   <p>{cartItems[item._id]}</p>
-                  <p>{item.price * cartItems[item._id]}</p>
-                  <p onClick={() => removeFromCart(item._id)} className="cross">
-                    x
-                  </p>
+                  <p>${item.price * cartItems[item._id]}</p>
+                  <div className="actions-dropdown">
+                    <button className="action-button">Actions ▼</button>
+                    <div className="action-menu">
+                      <button
+                        onClick={() =>
+                          handleUpdateQuantity(
+                            item._id,
+                            cartItems[item._id] + 1
+                          )
+                        }
+                      >
+                        + Increase Quantity
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleUpdateQuantity(
+                            item._id,
+                            cartItems[item._id] - 1
+                          )
+                        }
+                        disabled={cartItems[item._id] <= 1}
+                      >
+                        - Decrease Quantity
+                      </button>
+                      <button
+                        className="delete-button"
+                        onClick={() => handleRemoveItem(item._id)}
+                      >
+                        Remove Item
+                      </button>
+                    </div>
+                  </div>
                 </div>
                 <hr />
               </div>
@@ -50,12 +97,17 @@ function Cart() {
             <hr />
             <div className="cart-total-details">
               <p>Delivery Fee</p>
-              <p>${getTotalCartAmount() === 0 ? 0 : 2}</p>
+              <p>${getTotalCartAmount() === 0 ? 0 : SHIPPING_FEE}</p>
             </div>
             <hr />
             <div className="cart-total-details">
               <b>Total</b>
-              <b>${getTotalCartAmount()===0?0:getTotalCartAmount() + 2}</b>
+              <b>
+                $
+                {getTotalCartAmount() === 0
+                  ? 0
+                  : getTotalCartAmount() + SHIPPING_FEE}
+              </b>
             </div>
           </div>
           <button onClick={() => navigate("/order")}>
