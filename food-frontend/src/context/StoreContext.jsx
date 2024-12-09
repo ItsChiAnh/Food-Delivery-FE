@@ -17,7 +17,22 @@ const StoreContextProvider = (props) => {
   const removeFromCart = (itemId) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
   };
-
+  const updateQuantity = (itemId, quantity) => {
+    if (quantity < 0) {
+      console.warn("Quantity cannot be negative. Can't update.");
+      return;
+    }
+    setCartItems((prev) => {
+      const updatedCart = { ...prev };
+      if (quantity === 0) {
+        // Remove the item if quantity is set to 0
+        delete updatedCart[itemId];
+      } else {
+        updatedCart[itemId] = quantity;
+      }
+      return updatedCart;
+    });
+  };
   const getTotalCartAmount = () => {
     let totalAmount = 0;
     for (const item in cartItems) {
@@ -36,6 +51,7 @@ const StoreContextProvider = (props) => {
     addToCart,
     removeFromCart,
     getTotalCartAmount,
+    updateQuantity,
   };
 
   return (

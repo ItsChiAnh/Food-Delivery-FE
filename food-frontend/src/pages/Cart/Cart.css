@@ -114,3 +114,47 @@
         
     }
 }
+
+/* phan dropdown menu */
+.actions-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.action-menu {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-width: 150px;
+    z-index: 1000;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.action-menu button {
+    width: 100%;
+    padding: 10px 15px;
+    text-align: left;
+    border: none;
+    background: none;
+    font-size: 14px;
+    cursor: pointer;
+    color: #333;
+}
+
+.action-menu button:hover {
+    background-color: #f5f5f5;
+}
+
+.action-menu .delete-button {
+    color: red;
+}
+
+.action-menu .delete-button:hover {
+    background-color: #ffe5e5;
+}
+
+.actions-dropdown:hover .action-menu {
+    display: block;
+}
