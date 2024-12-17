@@ -9,7 +9,7 @@
 
 .login-popup-container {
   place-self: center;
-  width: max(23vw, 330px);
+  width: max(35vw, 495px);
   color: #808080;
   background-color: white;
   display: flex;
@@ -72,3 +72,7 @@
   font-weight: 500;
   cursor: pointer;
 }
+
+
+
+/* toast */

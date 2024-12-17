@@ -44,6 +44,7 @@ const StoreContextProvider = (props) => {
     }
     return totalAmount;
   };
+<<<<<<< HEAD
 
   const getDetailProduct = async (id) => {
     const response = await axios.post(url + "/api/food/findid", { id });
@@ -65,6 +66,8 @@ const StoreContextProvider = (props) => {
     }
     loadData();
   }, []);
+=======
+>>>>>>> c6f5ab9ab53f426cbd8866914086e27be86acd0c
 
   const contextValue = {
     food_list,
@@ -74,10 +77,13 @@ const StoreContextProvider = (props) => {
     removeFromCart,
     getTotalCartAmount,
     updateQuantity,
+<<<<<<< HEAD
     url,
     token,
     setToken,
     getDetailProduct,
+=======
+>>>>>>> c6f5ab9ab53f426cbd8866914086e27be86acd0c
   };
 
   return (
