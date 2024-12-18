@@ -29,7 +29,6 @@ function Navbar({ setShowLogin }) {
         </a>
         <a
           href="#app-dowload"
-          c
           onClick={() => setMenu("mobile-app")}
           className={menu === "mobile-app" ? "active" : ""}
         >
