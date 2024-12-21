@@ -18,10 +18,12 @@ const LoginPopup = ({ setShowLogin }) => {
     e.preventDefault();
     try {
       const user = await AuthService.login(email, password);
+      console.log("user", user);
       alert("Đăng nhập thành công!");
       console.log("User Info:", user);
       setShowLogin(false); // Đóng popup
     } catch (error) {
+      console.log("error", error);
       alert(error.response?.data?.message || "Đăng nhập thất bại!");
     }
   };
