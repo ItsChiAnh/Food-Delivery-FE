@@ -2,7 +2,7 @@ import axios from "axios";
 import TokenService from "./token.service";
 
 const api = axios.create({
-  baseURL: "https://food-del-backend-iui0.onrender.com/api",
+  baseURL: "http://localhost:4000/api",
   headers: {
     "Content-Type": "application/json",
   },

@@ -12,9 +12,10 @@ class AuthService {
     console.log("test");
     const response = await api.post("/auth/login", { email, password });
     console.log("response", response);
-    if (response.data.access_token) {
-      TokenService.setUser(response.data); // Lưu token vào localStorage
+    if (response.data.tokens.access_token) {
+      TokenService.setUser(response.data.tokens.access_token);
     }
+
     return response.data;
   }
 

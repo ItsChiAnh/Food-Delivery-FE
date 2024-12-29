@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./LoginPopup.css";
 import { assets } from "../../assets/assets";
 import AuthService from "../../services/auth.service";
 import UserService from "../../services/user.service";
+
+import { StoreContext } from "../../context/StoreContext"; // Import StoreContext
 
 const LoginPopup = ({ setShowLogin }) => {
   const [currState, setCurrState] = useState("Login");
@@ -12,7 +14,7 @@ const LoginPopup = ({ setShowLogin }) => {
   const [name, setName] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
+  const { fetchUserCart } = useContext(StoreContext);
   // Xử lý đăng nhập
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -20,6 +22,9 @@ const LoginPopup = ({ setShowLogin }) => {
       const user = await AuthService.login(email, password);
       console.log("user", user);
       alert("Đăng nhập thành công!");
+      const userToken = localStorage.getItem("user");
+      console.log("userToken", JSON.parse(userToken));
+      await fetchUserCart(JSON.parse(userToken));
       console.log("User Info:", user);
       setShowLogin(false); // Đóng popup
     } catch (error) {

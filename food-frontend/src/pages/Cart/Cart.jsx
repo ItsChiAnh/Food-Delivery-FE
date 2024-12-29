@@ -9,9 +9,17 @@ import { StoreContext } from "../../context/StoreContext";
 import "./Cart.css";
 
 function Cart() {
-  const { cartItems, food_list, getTotalCartAmount, updateQuantity } =
-    useContext(StoreContext);
+  const {
+    cartItems,
+    food_list,
+    getTotalCartAmount,
+    updateQuantity,
+    AddUserCart,
+    removeUserCart,
+  } = useContext(StoreContext);
   const navigate = useNavigate();
+  const userToken = JSON.parse(localStorage.getItem("user"));
+  console.log("userToken", userToken);
   const SHIPPING_FEE = 2;
 
   const handleRemoveItem = (itemId) => {
@@ -52,7 +60,8 @@ function Cart() {
                     <div className="action-menu">
                       <button
                         onClick={() =>
-                          handleUpdateQuantity(
+                          AddUserCart(
+                            userToken,
                             item._id,
                             cartItems[item._id] + 1
                           )
@@ -60,9 +69,10 @@ function Cart() {
                       >
                         + Increase Quantity
                       </button>
-                      <button
+                      {/* <button
                         onClick={() =>
-                          handleUpdateQuantity(
+                          AddUserCart(
+                            userToken,
                             item._id,
                             cartItems[item._id] - 1
                           )
@@ -70,10 +80,10 @@ function Cart() {
                         disabled={cartItems[item._id] <= 1}
                       >
                         - Decrease Quantity
-                      </button>
+                      </button> */}
                       <button
                         className="delete-button"
-                        onClick={() => handleRemoveItem(item._id)}
+                        onClick={() => removeUserCart(userToken, item._id)}
                       >
                         Remove Item
                       </button>

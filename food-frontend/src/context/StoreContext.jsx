@@ -7,6 +7,7 @@ const StoreContextProvider = (props) => {
   const url = "http://localhost:4000";
   const [food_list, setFoodList] = useState([]);
   const [token, setToken] = useState("");
+
   const addToCart = (itemId) => {
     if (!cartItems[itemId]) {
       setCartItems((prev) => ({ ...prev, [itemId]: 1 }));
@@ -52,16 +53,73 @@ const StoreContextProvider = (props) => {
 
   const fetchFoodList = async () => {
     const response = await axios.get(url + "/api/food/list");
-    console.log(response);
     setFoodList(response.data.data);
+  };
+
+  const fetchUserCart = async (userToken) => {
+    console.log("hi", userToken);
+    try {
+      const response = await axios.get(url + "/api/cart/get", {
+        headers: {
+          Authorization: `Bearer ${userToken}`, // Truyền access token qua header
+        },
+      });
+      console.log("User Cart:", response.data.cartData);
+      setCartItems(response.data.cartData); // Gắn giỏ hàng lấy được vào state
+    } catch (error) {
+      console.error("Error fetching cart:", error);
+      throw error;
+    }
+  };
+
+  const AddUserCart = async (userToken, itemId, newQuantity) => {
+    console.log("hi", userToken);
+    try {
+      const response = await axios.post(
+        url + "/api/cart/add",
+        { itemId, newQuantity },
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`, // Truyền access token qua header
+          },
+        }
+      );
+
+      updateQuantity(itemId, newQuantity);
+      // setCartItems(response); // Gắn giỏ hàng lấy được vào state
+      await fetchUserCart(userToken);
+      console.log("User Cart:", response);
+    } catch (error) {
+      console.error("Error fetching cart:", error);
+      throw error;
+    }
+  };
+
+  const removeUserCart = async (userToken, itemId) => {
+    try {
+      const response = await axios.post(
+        url + "/api/cart/remove",
+        { itemId },
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`, // Truyền access token qua header
+          },
+        }
+      );
+
+      // setCartItems(response); // Gắn giỏ hàng lấy được vào state
+      await fetchUserCart(userToken);
+
+      console.log("remove", response);
+    } catch (error) {
+      console.error("Error fetching cart:", error);
+      throw error;
+    }
   };
 
   useEffect(() => {
     async function loadData() {
       await fetchFoodList();
-      if (localStorage.getItem("token")) {
-        setToken(localStorage.getItem("token"));
-      }
     }
     loadData();
   }, []);
@@ -78,6 +136,9 @@ const StoreContextProvider = (props) => {
     token,
     setToken,
     getDetailProduct,
+    fetchUserCart,
+    AddUserCart,
+    removeUserCart,
   };
 
   return (
