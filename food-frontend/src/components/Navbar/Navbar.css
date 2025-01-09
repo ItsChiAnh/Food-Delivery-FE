@@ -4,6 +4,7 @@
   justify-content: space-between;
   align-items: center;
 }
+
 .navbar .logo {
   width: 150px;
 }
@@ -64,16 +65,20 @@
   .navbar .logo {
     width: 140px;
   }
+
   .navbar-menu {
     gap: 20px;
     font-size: 17px;
   }
+
   .navbar-right {
     gap: 30px;
   }
+
   .navbar-right img {
     width: 22px;
   }
+
   .navbar-right button {
     padding: 8px 25px;
   }
@@ -83,16 +88,20 @@
   .navbar .logo {
     width: 120px;
   }
+
   .navbar-menu {
     gap: 15px;
     font-size: 16px;
   }
+
   .navbar-right {
     gap: 20px;
   }
+
   .navbar-right img {
     width: 20px;
   }
+
   .navbar-right button {
     padding: 7px 20px;
     font-size: 15px;
@@ -103,4 +112,41 @@
   .navbar-menu {
     display: none;
   }
+}
+
+
+.user-menu {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.user-menu span {
+  font-size: 16px;
+  color: #333;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.user-menu .logout-button {
+  background-color: transparent;
+  border: none;
+  color: #333;
+  font-size: 16px;
+  cursor: pointer;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.user-menu .logout-button:hover {
+  color: #ff0000;
+  /* Màu đỏ khi hover */
+}
+
+.user-menu:hover span {
+  opacity: 0;
+  /* Ẩn chữ "Hi, [Tên]" khi hover */
+}
+
+.user-menu:hover .logout-button {
+  opacity: 1;
+  /* Hiện nút Logout khi hover */
 }

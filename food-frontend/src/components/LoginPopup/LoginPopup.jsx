@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./LoginPopup.css";
 import { assets } from "../../assets/assets";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../redux/slices/userSlice";
 import AuthService from "../../services/auth.service";
 import UserService from "../../services/user.service";
 
@@ -12,14 +14,21 @@ const LoginPopup = ({ setShowLogin }) => {
   const [name, setName] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const dispatch = useDispatch();
 
   // Xử lý đăng nhập
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const user = await AuthService.login(email, password);
+      const response = await AuthService.login(email, password);
       alert("Đăng nhập thành công!");
-      console.log("User Info:", user);
+
+      dispatch(setUser(response.userinfo)); // Cập nhật thông tin người dùng vo Redux Store
+
+      if (response.tokens.access_token) {
+        localStorage.setItem("accessToken", response.tokens.access_token);
+      }
+
       setShowLogin(false); // Đóng popup
     } catch (error) {
       alert(error.response?.data?.message || "Đăng nhập thất bại!");
