@@ -46,7 +46,7 @@ function FoodItem({ id, name, price, description, image }) {
             <div>
               <img
                 className="food-item-image"
-                src={url + "/images/" + image}
+                src={image}
                 alt=""
                 style={{
                   objectFit: "cover",
@@ -84,7 +84,7 @@ function FoodItem({ id, name, price, description, image }) {
           <img
             onClick={() => showModal()}
             className="food-item-image"
-            src={url + "/images/" + image}
+            src={image}
             alt=""
           />
           {!cartItems[id] ? (
