@@ -3,10 +3,23 @@ import TokenService from "./token.service";
 
 class AuthService {
   // register
-  async register(userName, email, password, avatar = "default-avatar.png") {
-    return api.post("/auth/register", { userName, email, password, avatar });
-  }
 
+  async register(userName, email, password, avatar = "default-avatar.png") {
+    try {
+      console.log("Sending data:", { userName, email, password, avatar });
+      const response = await api.post("/auth/register", {
+        userName,
+        email,
+        password,
+        avatar,
+      });
+      console.log("Response:", response.data);
+      return response;
+    } catch (error) {
+      console.error("Error:", error.response?.data || error.message);
+      throw error;
+    }
+  }
   // login
   async login(email, password) {
     const response = await api.post("/auth/login", { email, password });
