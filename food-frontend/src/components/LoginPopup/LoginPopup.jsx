@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./LoginPopup.css";
 import { assets } from "../../assets/assets";
 import { useDispatch } from "react-redux";
@@ -9,8 +9,6 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { StoreContext } from "../../context/StoreContext"; // Import StoreContext
-
 const LoginPopup = ({ setShowLogin }) => {
   const [currState, setCurrState] = useState("Login");
   const [email, setEmail] = useState("");
@@ -19,17 +17,21 @@ const LoginPopup = ({ setShowLogin }) => {
   const [name, setName] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  // const [showPassword, setShowPassword] = useState(false); //state quan li hien mk
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // setEmail("");
-    setPassword("");
-    setName("");
-    // setOtp("");
-    // setNewPassword("");
-    // setConfirmPassword("");
-  }, [currState]);
+    // Add or remove "no-scroll" class to body to lock/unlock scrolling
+    if (setShowLogin) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.classList.remove("no-scroll");
+    };
+  }, [setShowLogin]);
 
   // Xử lý đăng nhập
   const handleLogin = async (e) => {
