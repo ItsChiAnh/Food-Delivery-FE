@@ -5,7 +5,7 @@ import "../Navbar/Navbar.css";
 import { assets } from "../../assets/assets";
 import { Link } from "react-router-dom";
 import { StoreContext } from "../../context/StoreContext";
-
+import { toast } from "react-toastify";
 function Navbar({ setShowLogin }) {
   const [menu, setMenu] = useState("menu");
   const [dropdownOpen, setDropdownOpen] = useState(false); // Trạng thái dropdown
@@ -15,7 +15,7 @@ function Navbar({ setShowLogin }) {
 
   const handleLogout = () => {
     dispatch(logout()); // Xóa trạng thái người dùng trong Redux
-    alert("Đăng xuất thành công!");
+    toast.success("Đăng xuất thành công!");
   };
 
   return (
