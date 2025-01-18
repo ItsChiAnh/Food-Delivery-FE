@@ -13,60 +13,54 @@ const LoginPopup = ({ setShowLogin }) => {
   const [currState, setCurrState] = useState("Login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // Toggle for password visibility
   const [otp, setOtp] = useState("");
   const [name, setName] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Toggle for confirm password visibility
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Add or remove "no-scroll" class to body to lock/unlock scrolling
     if (setShowLogin) {
       document.body.classList.add("no-scroll");
     } else {
       document.body.classList.remove("no-scroll");
     }
 
-    // Cleanup on unmount
     return () => {
       document.body.classList.remove("no-scroll");
     };
   }, [setShowLogin]);
 
-  // Xử lý đăng nhập
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const response = await AuthService.login(email, password);
       toast.success("Đăng nhập thành công!");
-
-      dispatch(setUser(response.userinfo)); // Cập nhật thông tin người dùng vo Redux Store
+      dispatch(setUser(response.userinfo));
 
       if (response.tokens.access_token) {
         localStorage.setItem("accessToken", response.tokens.access_token);
       }
 
-      setShowLogin(false); // Đóng popup
+      setShowLogin(false);
     } catch (error) {
       toast.error(error.response?.data?.message || "Đăng nhập thất bại!");
     }
   };
 
-  // Xử lý đăng ký
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
       const response = await AuthService.register(name, email, password);
-      console.log("Response:", response); // Log response từ API
       toast.success(response.data.message || "Đăng ký thành công!");
-      setCurrState("Login"); // Chuyển về màn hình Login
+      setCurrState("Login");
     } catch (error) {
-      console.error("Error:", error.response?.data || error.message);
       toast.error(error.response?.data?.Message || "Đăng ký thất bại!");
     }
   };
 
-  // Gửi OTP để đặt lại mật khẩu
   const handleSendOtp = async (e) => {
     e.preventDefault();
     if (!email) {
@@ -82,7 +76,6 @@ const LoginPopup = ({ setShowLogin }) => {
     }
   };
 
-  // Đặt lại mật khẩu với OTP
   const handleResetPassword = async (e) => {
     e.preventDefault();
     if (!newPassword || !confirmPassword) {
@@ -122,7 +115,46 @@ const LoginPopup = ({ setShowLogin }) => {
           />
         </div>
         <div className="login-popup-input">
-          {/* Đăng ký */}
+          {/* Login */}
+          {currState === "Login" && (
+            <>
+              <input
+                type="email"
+                placeholder="Your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <div className="password-container">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <span
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="password-toggle"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
+              <button onClick={handleLogin}>Login</button>
+              <p>
+                Forget your password?
+                <span onClick={() => setCurrState("Forgot Password")}>
+                  {" "}
+                  Click here
+                </span>
+              </p>
+              <p>
+                Create a new account?
+                <span onClick={() => setCurrState("Sign Up")}> Click here</span>
+              </p>
+            </>
+          )}
+          {/* Sign Up */}
           {currState === "Sign Up" && (
             <>
               <input
@@ -139,17 +171,40 @@ const LoginPopup = ({ setShowLogin }) => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <div className="password-container">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <span
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="password-toggle"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
+              <div className="password-container">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm Password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+                <span
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="password-toggle"
+                >
+                  {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
               <button onClick={handleSignUp}>Sign Up</button>
             </>
           )}
-          {/* Quên mật khẩu */}
+          {/* Forgot Password */}
           {currState === "Forgot Password" && (
             <>
               <input
@@ -163,7 +218,7 @@ const LoginPopup = ({ setShowLogin }) => {
               <button onClick={handleSendOtp}>Send OTP</button>
             </>
           )}
-          {/* Nhập OTP */}
+          {/* Enter OTP */}
           {currState === "Enter OTP" && (
             <>
               <input
@@ -178,74 +233,43 @@ const LoginPopup = ({ setShowLogin }) => {
               </button>
             </>
           )}
-          {/* Đặt lại mật khẩu */}
+          {/* Reset Password */}
           {currState === "Reset Password" && (
             <>
-              <input
-                type="password"
-                placeholder="New Password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                required
-              />
-              <input
-                type="password"
-                placeholder="Confirm New Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
+              <div className="password-container">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="New Password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                />
+                <span
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="password-toggle"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
+              <div className="password-container">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm New Password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+                <span
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="password-toggle"
+                >
+                  {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
               <button onClick={handleResetPassword}>Confirm</button>
             </>
           )}
-          {/* Đăng nhập */}
-          {currState === "Login" && (
-            <>
-              <input
-                type="email"
-                placeholder="Your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <button onClick={handleLogin}>Login</button>
-            </>
-          )}
         </div>
-        {/* Liên kết chuyển trạng thái */}
-        {currState === "Forgot Password" && (
-          <p>
-            Remember your password?
-            <span onClick={() => setCurrState("Login")}>Login here</span>
-          </p>
-        )}
-        {currState === "Login" && (
-          <>
-            <p>
-              Forget your password?
-              <span onClick={() => setCurrState("Forgot Password")}>
-                Click here
-              </span>
-            </p>
-            <p>
-              Create a new account?
-              <span onClick={() => setCurrState("Sign Up")}>Click here</span>
-            </p>
-          </>
-        )}
-        {currState === "Sign Up" && (
-          <p>
-            Already have an account?
-            <span onClick={() => setCurrState("Login")}>Login here</span>
-          </p>
-        )}
       </form>
     </div>
   );

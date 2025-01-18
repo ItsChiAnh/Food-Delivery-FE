@@ -82,3 +82,23 @@ body.no-scroll {
 
 
 /* toast */
+
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-container input {
+  width: 100%;
+  padding-right: 35px;
+  /* Adjust for the icon */
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  color: grey;
+}
