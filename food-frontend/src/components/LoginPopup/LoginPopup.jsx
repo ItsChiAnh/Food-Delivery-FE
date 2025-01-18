@@ -1,8 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import "./LoginPopup.css";
 import { assets } from "../../assets/assets";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../redux/slices/userSlice";
 import AuthService from "../../services/auth.service";
 import UserService from "../../services/user.service";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { StoreContext } from "../../context/StoreContext"; // Import StoreContext
 
@@ -14,22 +19,34 @@ const LoginPopup = ({ setShowLogin }) => {
   const [name, setName] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const { fetchUserCart } = useContext(StoreContext);
+  // const [showPassword, setShowPassword] = useState(false); //state quan li hien mk
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // setEmail("");
+    setPassword("");
+    setName("");
+    // setOtp("");
+    // setNewPassword("");
+    // setConfirmPassword("");
+  }, [currState]);
+
   // Xử lý đăng nhập
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const user = await AuthService.login(email, password);
-      console.log("user", user);
-      alert("Đăng nhập thành công!");
-      const userToken = localStorage.getItem("user");
-      console.log("userToken", JSON.parse(userToken));
-      await fetchUserCart(JSON.parse(userToken));
-      console.log("User Info:", user);
+      const response = await AuthService.login(email, password);
+      toast.success("Đăng nhập thành công!");
+
+      dispatch(setUser(response.userinfo)); // Cập nhật thông tin người dùng vo Redux Store
+
+      if (response.tokens.access_token) {
+        localStorage.setItem("accessToken", response.tokens.access_token);
+      }
+
       setShowLogin(false); // Đóng popup
     } catch (error) {
-      console.log("error", error);
-      alert(error.response?.data?.message || "Đăng nhập thất bại!");
+      toast.error(error.response?.data?.message || "Đăng nhập thất bại!");
     }
   };
 
@@ -39,11 +56,11 @@ const LoginPopup = ({ setShowLogin }) => {
     try {
       const response = await AuthService.register(name, email, password);
       console.log("Response:", response); // Log response từ API
-      alert(response.data.message || "Đăng ký thành công!");
+      toast.success(response.data.message || "Đăng ký thành công!");
       setCurrState("Login"); // Chuyển về màn hình Login
     } catch (error) {
       console.error("Error:", error.response?.data || error.message);
-      alert(error.response?.data?.Message || "Đăng ký thất bại!");
+      toast.error(error.response?.data?.Message || "Đăng ký thất bại!");
     }
   };
 
@@ -51,15 +68,15 @@ const LoginPopup = ({ setShowLogin }) => {
   const handleSendOtp = async (e) => {
     e.preventDefault();
     if (!email) {
-      alert("Vui lòng nhập email!");
+      toast.warn("Vui lòng nhập email!");
       return;
     }
     try {
       const response = await UserService.sendOtp(email);
-      alert(response.data.message || "OTP đã được gửi!");
+      toast.success(response.data.message || "OTP đã được gửi!");
       setCurrState("Enter OTP");
     } catch (error) {
-      alert(error.response?.data?.message || "Gửi OTP thất bại!");
+      toast.error(error.response?.data?.message || "Gửi OTP thất bại!");
     }
   };
 
@@ -67,11 +84,11 @@ const LoginPopup = ({ setShowLogin }) => {
   const handleResetPassword = async (e) => {
     e.preventDefault();
     if (!newPassword || !confirmPassword) {
-      alert("Vui lòng điền đầy đủ các trường!");
+      toast.warn("Vui lòng điền đầy đủ các trường!");
       return;
     }
     if (newPassword !== confirmPassword) {
-      alert("Mật khẩu không khớp!");
+      toast.error("Mật khẩu không khớp!");
       return;
     }
     try {
@@ -80,10 +97,14 @@ const LoginPopup = ({ setShowLogin }) => {
         otp,
         newPassword
       );
-      alert(response.data.message || "Mật khẩu đã được đặt lại thành công!");
+      toast.success(
+        response.data.message || "Mật khẩu đã được đặt lại thành công!"
+      );
       setCurrState("Login");
     } catch (error) {
-      alert(error.response?.data?.message || "Đặt lại mật khẩu thất bại!");
+      toast.error(
+        error.response?.data?.message || "Đặt lại mật khẩu thất bại!"
+      );
     }
   };
 
