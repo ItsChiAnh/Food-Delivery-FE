@@ -3,7 +3,7 @@ import "./FoodDisplay.css";
 import { StoreContext } from "../../context/StoreContext";
 import FoodItem from "../FoodItem/FoodItem";
 
-function FoodDisplay({ category }) {
+const FoodDisplay = ({ category }) => {
   const { food_list } = useContext(StoreContext);
   return (
     <div className="food-display" id="food=display">
@@ -16,7 +16,7 @@ function FoodDisplay({ category }) {
                 key={index}
                 id={item._id}
                 name={item.name}
-                description={item.description}
+                description={"Click for more info"}
                 price={item.price}
                 image={item.image}
               />
@@ -26,6 +26,6 @@ function FoodDisplay({ category }) {
       </div>
     </div>
   );
-}
+};
 
 export default FoodDisplay;

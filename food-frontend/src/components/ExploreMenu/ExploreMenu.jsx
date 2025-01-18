@@ -2,7 +2,7 @@ import React from "react";
 import "./ExploreMenu.css";
 import { menu_list } from "../../assets/assets";
 
-function ExploreMenu({ category, setCategory }) {
+const ExploreMenu = ({ category, setCategory }) => {
   return (
     <div className="explore-menu" id="explore-menu">
       <h1>Explore our menu</h1>
@@ -37,6 +37,6 @@ function ExploreMenu({ category, setCategory }) {
       <hr />
     </div>
   );
-}
+};
 
 export default ExploreMenu;
