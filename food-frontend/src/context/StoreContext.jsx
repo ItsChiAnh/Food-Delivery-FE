@@ -1,10 +1,9 @@
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
-
 export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
-  const [cartItems, setCartItems] = useState("");
+  const [cartItems, setCartItems] = useState({});
   const url = "https://food-delivery-be-xk4s.onrender.com";
   const [food_list, setFoodList] = useState([]);
   const [token, setToken] = useState("");
@@ -157,6 +156,15 @@ const StoreContextProvider = (props) => {
     }
   };
 
+  const loadCartData = async (token) => {
+    const response = await axios.post(
+      url + "/api/cart/get",
+      {},
+      { headers: { token } }
+    );
+    setCartItems(response.data.cartData);
+  };
+
   const fetchUserCart = async (userToken) => {
     console.log("hi", userToken);
     try {
@@ -230,6 +238,7 @@ const StoreContextProvider = (props) => {
       if (localStorage.getItem("token")) {
         setToken(localStorage.getItem("token"));
         await loadCartData(localStorage.getItem("token"));
+        console("cart data of token is: ", loadCartData);
       }
     }
     loadData();

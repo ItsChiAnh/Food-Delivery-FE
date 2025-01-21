@@ -1,6 +1,11 @@
+// 1. Thư viện bên ngoài
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+// 2. Module cục bộ
 import { StoreContext } from "../../context/StoreContext";
+
+// 3. File CSS và asset
 import "./Cart.css";
 
 function Cart() {
@@ -12,7 +17,6 @@ function Cart() {
     AddUserCart,
     removeUserCart,
   } = useContext(StoreContext);
-
   const navigate = useNavigate();
 
   // Retrieve the token
