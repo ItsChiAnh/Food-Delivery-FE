@@ -32,6 +32,7 @@ function FoodItem({ id, name, price, description, image }) {
   };
 
   const handleAddToCart = () => {
+    console.log("Adding to cart. Item ID:", id);
     addToCart(id); // Pass the item ID to add it to the cart
   };
 

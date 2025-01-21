@@ -1,11 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// Trạng thái ban đầu
 const initialState = {
-  userInfo: null, // Lưu thông tin người dùng
+  userInfo: JSON.parse(localStorage.getItem("userInfo")) || null, // Lấy thông tin người dùng từ localStorage
 };
 
-// Tạo slice
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -16,10 +14,13 @@ const userSlice = createSlice({
     logout: (state) => {
       state.userInfo = null; // Xóa thông tin người dùng
       localStorage.removeItem("accessToken"); // Xóa token khỏi localStorage
+      localStorage.removeItem("userInfo"); // Xóa thông tin người dùng khỏi localStorage
+      console.log(
+        "User logged out and data cleared from Redux and localStorage"
+      );
     },
   },
 });
 
-export const { setUser, logout } = userSlice.actions; // Xuất các action
-export default userSlice.reducer; // Xuất reducer
-
+export const { setUser, logout } = userSlice.actions;
+export default userSlice.reducer;

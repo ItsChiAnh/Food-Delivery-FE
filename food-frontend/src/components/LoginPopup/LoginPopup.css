@@ -91,14 +91,21 @@ body.no-scroll {
 
 .password-container input {
   width: 100%;
-  padding-right: 35px;
-  /* Adjust for the icon */
+  padding-right: 40px;
+  /* Chừa không gian cho biểu tượng mắt */
 }
 
-.password-toggle {
+.password-container span {
   position: absolute;
   right: 10px;
+  /* Căn biểu tượng mắt sát bên phải */
   cursor: pointer;
+  color: #aaa;
+  /* Màu biểu tượng */
   font-size: 18px;
-  color: grey;
+}
+
+.password-container span:hover {
+  color: #555;
+  /* Thay đổi màu khi hover */
 }
