@@ -1,6 +1,11 @@
+// 1. Thư viện bên ngoài
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+// 2. Module cục bộ
 import { StoreContext } from "../../context/StoreContext";
+
+// 3. File CSS và asset
 import "./Cart.css";
 
 function Cart() {
@@ -11,11 +16,8 @@ function Cart() {
     updateQuantity,
     AddUserCart,
     removeUserCart,
-    url,
   } = useContext(StoreContext);
-
   const navigate = useNavigate();
-
   const userToken = JSON.parse(localStorage.getItem("user"));
   console.log("userToken", userToken);
   const SHIPPING_FEE = 2;
@@ -67,6 +69,18 @@ function Cart() {
                       >
                         + Increase Quantity
                       </button>
+                      {/* <button
+                        onClick={() =>
+                          AddUserCart(
+                            userToken,
+                            item._id,
+                            cartItems[item._id] - 1
+                          )
+                        }
+                        disabled={cartItems[item._id] <= 1}
+                      >
+                        - Decrease Quantity
+                      </button> */}
                       <button
                         className="delete-button"
                         onClick={() => removeUserCart(userToken, item._id)}
