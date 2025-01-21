@@ -1,28 +1,31 @@
 class TokenService {
+  // Lưu access token
+  setUser(accessToken) {
+    localStorage.setItem("accessToken", accessToken);
+  }
+
+  // Lấy access token từ localStorage
   getLocalAccessToken() {
-    const user = JSON.parse(localStorage.getItem("user"));
-    return user?.tokens?.access_token || null;
+    return localStorage.getItem("accessToken");
+  }
+
+  // Xóa thông tin người dùng (accessToken và refreshToken nếu có)
+  removeUser() {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken"); // Nếu sử dụng refresh token
+  }
+
+  // Nếu sử dụng refresh token:
+  setLocalRefreshToken(refreshToken) {
+    localStorage.setItem("refreshToken", refreshToken);
   }
 
   getLocalRefreshToken() {
-    const user = JSON.parse(localStorage.getItem("user"));
-    return user?.refresh_token;
+    return localStorage.getItem("refreshToken");
   }
 
-  updateLocalAccessToken(token) {
-    let user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      user.access_token = token;
-      localStorage.setItem("user", JSON.stringify(user));
-    }
-  }
-
-  setUser(user) {
-    localStorage.setItem("user", JSON.stringify(user));
-  }
-
-  removeUser() {
-    localStorage.removeItem("user");
+  removeRefreshToken() {
+    localStorage.removeItem("refreshToken");
   }
 }
 

@@ -77,10 +77,31 @@ const StoreContextProvider = (props) => {
     return response.data;
   };
 
-  const getCartProduct = async () => {
-    const response = await axios.get(url + "/api/cart/get");
-    console.log("getCartProduct", response);
-  };
+  useEffect(() => {
+    const loadCartData = async () => {
+      const token = localStorage.getItem("accessToken");
+      if (!token) return; // Exit if no token is found
+
+      try {
+        const response = await axios.post(
+          `${url}/api/cart/get`,
+          {},
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        console.log("Cart data fetched:", response.data.cartData);
+
+        // Map backend cartData to the frontend cartItems format
+        const cart = response.data.cartData || {};
+        setCartItems(cart); // Set cart items in state
+      } catch (error) {
+        console.error("Error fetching cart data:", error);
+      }
+    };
+
+    loadCartData();
+  }, []); // Run once when the app loads
 
   const fetchFoodList = async () => {
     try {
@@ -117,25 +138,31 @@ const StoreContextProvider = (props) => {
   };
 
   const AddUserCart = async (userToken, itemId, newQuantity) => {
-    console.log("hi", userToken);
+    console.log("Attempting to add item to cart:", { itemId, newQuantity });
+
+    if (!userToken) {
+      console.error("No user token found.");
+      return;
+    }
+
     try {
       const response = await axios.post(
-        url + "/api/cart/add",
-        { itemId, newQuantity },
+        `${url}/api/cart/add`,
+        { itemId, quantity: newQuantity },
         {
           headers: {
-            Authorization: `Bearer ${userToken}`, // Truyền access token qua header
+            Authorization: `Bearer ${userToken}`, // Ensure token is included
           },
         }
       );
 
-      updateQuantity(itemId, newQuantity);
-      // setCartItems(response); // Gắn giỏ hàng lấy được vào state
-      await fetchUserCart(userToken);
-      console.log("User Cart:", response);
+      console.log("Cart updated:", response.data);
+      updateQuantity(itemId, newQuantity); // Update cart locally
     } catch (error) {
-      console.error("Error fetching cart:", error);
-      throw error;
+      console.error(
+        "Error adding item to cart:",
+        error.response?.data || error.message
+      );
     }
   };
 

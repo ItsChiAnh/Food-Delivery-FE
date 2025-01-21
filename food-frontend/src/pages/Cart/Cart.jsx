@@ -18,17 +18,46 @@ function Cart() {
     removeUserCart,
   } = useContext(StoreContext);
   const navigate = useNavigate();
-  const userToken = JSON.parse(localStorage.getItem("user"));
+
+  // Retrieve the token
+  const userToken = localStorage.getItem("accessToken");
+  if (!userToken) {
+    console.error("No user token found. Cannot perform cart actions.");
+  }
   console.log("userToken", userToken);
+
   const SHIPPING_FEE = 2;
 
-  const handleRemoveItem = (itemId) => {
-    updateQuantity(itemId, 0); // Remove item by setting quantity to 0
+  // Handle adding items to the cart
+  const handleAddToCart = async (itemId) => {
+    if (!userToken) {
+      alert("Please log in to add items to your cart.");
+      return;
+    }
+    try {
+      await AddUserCart(userToken, itemId, cartItems[itemId] + 1 || 1); // Increment quantity
+      console.log(`Added item ${itemId} to cart`);
+    } catch (error) {
+      console.error("Error adding item to cart:", error);
+    }
   };
 
-  const handleUpdateQuantity = (itemId, newQuantity) => {
-    if (newQuantity >= 0) {
-      updateQuantity(itemId, newQuantity); // Update item quantity
+  // Handle removing items from the cart
+  const handleRemoveFromCart = async (itemId) => {
+    if (!userToken) {
+      alert("Please log in to remove items from your cart.");
+      return;
+    }
+    try {
+      const newQuantity = cartItems[itemId] - 1;
+      if (newQuantity > 0) {
+        await AddUserCart(userToken, itemId, newQuantity); // Decrement quantity
+      } else {
+        await removeUserCart(userToken, itemId); // Remove item if quantity is 0
+      }
+      console.log(`Removed item ${itemId} from cart`);
+    } catch (error) {
+      console.error("Error removing item from cart:", error);
     }
   };
 
@@ -56,44 +85,25 @@ function Cart() {
                   <p>{cartItems[item._id]}</p>
                   <p>${item.price * cartItems[item._id]}</p>
                   <div className="actions-dropdown">
-                    <button className="action-button">Actions ▼</button>
-                    <div className="action-menu">
-                      <button
-                        onClick={() =>
-                          AddUserCart(
-                            userToken,
-                            item._id,
-                            cartItems[item._id] + 1
-                          )
-                        }
-                      >
-                        + Increase Quantity
-                      </button>
-                      {/* <button
-                        onClick={() =>
-                          AddUserCart(
-                            userToken,
-                            item._id,
-                            cartItems[item._id] - 1
-                          )
-                        }
-                        disabled={cartItems[item._id] <= 1}
-                      >
-                        - Decrease Quantity
-                      </button> */}
-                      <button
-                        className="delete-button"
-                        onClick={() => removeUserCart(userToken, item._id)}
-                      >
-                        Remove Item
-                      </button>
-                    </div>
+                    <button
+                      onClick={() => handleAddToCart(item._id)}
+                      className="action-button"
+                    >
+                      + Add
+                    </button>
+                    <button
+                      onClick={() => handleRemoveFromCart(item._id)}
+                      className="delete-button"
+                    >
+                      - Remove
+                    </button>
                   </div>
                 </div>
                 <hr />
               </div>
             );
           }
+          return null;
         })}
       </div>
       <div className="cart-bottom">
@@ -120,7 +130,15 @@ function Cart() {
               </b>
             </div>
           </div>
-          <button onClick={() => navigate("/order")}>
+          <button
+            onClick={() => {
+              if (!userToken) {
+                alert("Please log in to proceed to checkout.");
+                return;
+              }
+              navigate("/order");
+            }}
+          >
             PROCEED TO CHECKOUT
           </button>
         </div>
