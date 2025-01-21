@@ -21,6 +21,8 @@ const LoginPopup = ({ setShowLogin }) => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Toggle for confirm password visibility
   const dispatch = useDispatch();
 
+  const cartData = JSON.parse(localStorage.getItem("cartData")) || [];
+
   useEffect(() => {
     if (setShowLogin) {
       document.body.classList.add("no-scroll");
@@ -53,7 +55,12 @@ const LoginPopup = ({ setShowLogin }) => {
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      const response = await AuthService.register(name, email, password);
+      const response = await AuthService.register(
+        name,
+        email,
+        password,
+        cartData
+      );
       toast.success(response.data.message || "Đăng ký thành công!");
       setCurrState("Login");
     } catch (error) {

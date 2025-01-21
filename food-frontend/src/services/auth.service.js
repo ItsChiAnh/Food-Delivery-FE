@@ -4,14 +4,27 @@ import TokenService from "./token.service";
 class AuthService {
   // register
 
-  async register(userName, email, password, avatar = "default-avatar.png") {
+  async register(
+    userName,
+    email,
+    password,
+    avatar = "default-avatar.png",
+    cartData = {}
+  ) {
     try {
-      console.log("Sending data:", { userName, email, password, avatar });
+      console.log("Sending data:", {
+        userName,
+        email,
+        password,
+        avatar,
+        cartData,
+      });
       const response = await api.post("/auth/register", {
         userName,
         email,
         password,
         avatar,
+        cartData,
       });
       console.log("Response:", response.data);
       return response;
