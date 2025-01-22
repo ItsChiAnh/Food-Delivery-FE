@@ -1,17 +1,17 @@
 class TokenService {
   // Lưu access token
   setUser(accessToken) {
-    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("access_token", accessToken);
   }
 
   // Lấy access token từ localStorage
   getLocalAccessToken() {
-    return localStorage.getItem("accessToken");
+    return localStorage.getItem("access_token");
   }
 
   // Xóa thông tin người dùng (accessToken và refreshToken nếu có)
   removeUser() {
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("access_token");
     localStorage.removeItem("refreshToken"); // Nếu sử dụng refresh token
   }
 

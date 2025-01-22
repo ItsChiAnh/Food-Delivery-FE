@@ -20,27 +20,37 @@ const StoreContextProvider = (props) => {
     if (!cartItems[itemId]) {
       setCartItems((prev) => ({ ...prev, [itemId]: 1 }));
     } else {
-      setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
+      setCartItems((prev) => ({ ...prev, [itemId]: (prev[itemId] || 0) + 1 }));
     }
     if (token) {
-      await axios.post(
-        url + "/api/cart/add",
-        { itemId },
-        { headers: { token } }
-      );
+      // await axios.post(
+      //   url + "/api/cart/add",
+      //   { itemId },
+      //   { headers: { Authorization: `Bearer ${token}` } }
+      // );
+      try {
+        const response = await axios.post(
+          url + "/api/cart/add",
+          { itemId },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        console.log("Api response: ", response.data);
+      } catch (error) {
+        console.error("Error adding to cart: ", error);
+      }
     }
   };
 
   // const removeFromCart = (itemId) => {
   //   setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
   // };
-  const removeFromCart = async (item) => {
+  const removeFromCart = async (itemId) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
     if (token) {
       await axios.post(
         url + "/api/cart/remove",
         { itemId },
-        { headers: { token } }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
     }
   };
@@ -79,12 +89,16 @@ const StoreContextProvider = (props) => {
 
   useEffect(() => {
     const loadCartData = async () => {
-      const token = localStorage.getItem("accessToken");
-      if (!token) return; // Exit if no token is found
+      const token = localStorage.getItem("access_token");
+      console.log(token);
+      if (!token) {
+        console.log("no token!");
+        return;
+      } // Exit if no token is found
 
       try {
         const response = await axios.post(
-          `${url}/api/cart/get`,
+          url + "/api/cart/get",
           {},
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -101,7 +115,7 @@ const StoreContextProvider = (props) => {
     };
 
     loadCartData();
-  }, []); // Run once when the app loads
+  }, [token]); // Run once when the app loads
 
   const fetchFoodList = async () => {
     try {
@@ -113,12 +127,33 @@ const StoreContextProvider = (props) => {
   };
 
   const loadCartData = async (token) => {
-    const response = await axios.post(
-      url + "/api/cart/get",
-      {},
-      { headers: { token } }
-    );
-    setCartItems(response.data.cartData);
+    if (!token) {
+      console.log("No token found");
+      return;
+    }
+    try {
+      const response = await axios.post(
+        `${url}/api/cart/get`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Cart data response: ", response.data);
+      if (response.data.cartData) {
+        setCartItems((prev) => {
+          console.log("Previous cart items: ", prev);
+          console.log("New cart items: ", response.data.cartData);
+          return { ...response.data.cartData };
+        });
+      }
+
+      // setCartItems(response.data.cartData);
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
   };
 
   const fetchUserCart = async (userToken) => {
@@ -191,10 +226,10 @@ const StoreContextProvider = (props) => {
   useEffect(() => {
     async function loadData() {
       await fetchFoodList();
-      if (localStorage.getItem("token")) {
-        setToken(localStorage.getItem("token"));
-        await loadCartData(localStorage.getItem("token"));
-        console("cart data of token is: ", loadCartData);
+      const accToken = localStorage.getItem("access_token");
+      if (accToken) {
+        setToken(accToken);
+        await loadCartData(accToken);
       }
     }
     loadData();
