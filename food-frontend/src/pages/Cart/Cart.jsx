@@ -22,7 +22,7 @@ function Cart() {
   const navigate = useNavigate();
 
   // Retrieve the token
-  // const userToken = localStorage.getItem("access_token");
+  const userToken = localStorage.getItem("access_token");
   // if (!userToken) {
   //   console.error("No user token found. Cannot perform cart actions.");
   //   return;
