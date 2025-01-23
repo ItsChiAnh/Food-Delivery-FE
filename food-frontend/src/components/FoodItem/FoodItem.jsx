@@ -31,6 +31,11 @@ function FoodItem({ id, name, price, description, image }) {
     setProductDetails(null); // Reset chi tiết sản phẩm khi đóng modal
   };
 
+  const handleAddToCart = () => {
+    console.log("Adding to cart. Item ID:", id);
+    addToCart(id); // Pass the item ID to add it to the cart
+  };
+
   return (
     <>
       <Modal
@@ -90,7 +95,7 @@ function FoodItem({ id, name, price, description, image }) {
           {!cartItems[id] ? (
             <img
               className="add"
-              onClick={() => addToCart(id)}
+              onClick={handleAddToCart}
               src={assets.add_icon_white}
             />
           ) : (
@@ -102,7 +107,7 @@ function FoodItem({ id, name, price, description, image }) {
               />
               <p>{cartItems[id]}</p>
               <img
-                onClick={() => addToCart(id)}
+                onClick={handleAddToCart}
                 src={assets.add_icon_green}
                 alt=""
               />

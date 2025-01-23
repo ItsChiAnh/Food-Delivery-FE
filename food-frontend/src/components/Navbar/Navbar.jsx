@@ -1,27 +1,30 @@
 import React, { useState, useContext } from "react";
-import { useSelector, useDispatch } from "react-redux"; // Import Redux hooks
-import { logout } from "../../redux/slices/userSlice"; // Import action logout
+import { useSelector, useDispatch } from "react-redux"; // Redux hooks
+import { logout } from "../../redux/slices/userSlice"; // Logout action
 import "../Navbar/Navbar.css";
 import { assets } from "../../assets/assets";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // For navigation
 import { StoreContext } from "../../context/StoreContext";
 import { toast } from "react-toastify";
 function Navbar({ setShowLogin }) {
   const [menu, setMenu] = useState("menu");
-  const [dropdownOpen, setDropdownOpen] = useState(false); // Trạng thái dropdown
-  const user = useSelector((state) => state.user.userInfo); // Lấy thông tin người dùng từ Redux Store
+  const [dropdownOpen, setDropdownOpen] = useState(false); // Dropdown state
+  const user = useSelector((state) => state.user.userInfo); // Get user info from Redux
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { getTotalCartAmount } = useContext(StoreContext);
 
+  // Handle logout
   const handleLogout = () => {
-    dispatch(logout()); // Xóa trạng thái người dùng trong Redux
+    dispatch(logout()); // Clear Redux state
     toast.success("Đăng xuất thành công!");
+    navigate("/"); // Navigate to the homepage
   };
 
   return (
     <div className="navbar">
       <Link to="/">
-        <img src={assets.logo} alt="" className="logo" />
+        <img src={assets.logo} alt="Logo" className="logo" />
       </Link>
       <ul className="navbar-menu">
         <Link
@@ -54,25 +57,35 @@ function Navbar({ setShowLogin }) {
         </a>
       </ul>
       <div className="navbar-right">
-        <img src={assets.search_icon} alt="" />
+        {/* Search Icon */}
+        <img src={assets.search_icon} alt="Search" />
+
+        {/* Cart Icon */}
         <div className="navbar-search-icon">
           <Link to="/cart">
-            <img src={assets.basket_icon} alt="" />
+            <img src={assets.basket_icon} alt="Cart" />
           </Link>
-          <div className={getTotalCartAmount() === 0 ? "" : "dot"}></div>
+          {getTotalCartAmount() > 0 && <div className="dot"></div>}
         </div>
+
+        {/* User Dropdown or Login Button */}
         {user ? (
-          <div
-            className="user-menu"
-            onMouseEnter={() => setDropdownOpen(true)}
-            onMouseLeave={() => setDropdownOpen(false)}
-          >
-            {dropdownOpen ? (
-              <button className="logout-button" onClick={handleLogout}>
-                Logout
-              </button>
-            ) : (
-              <span>Hi, {user.userName}</span>
+          <div className="user-menu">
+            <span
+              className="user-name"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+            >
+              Hi, {user.userName}
+            </span>
+            {dropdownOpen && (
+              <div className="dropdown-menu">
+                <Link to="/myorders" className="dropdown-item">
+                  My Orders
+                </Link>
+                <button className="logout-button" onClick={handleLogout}>
+                  Logout
+                </button>
+              </div>
             )}
           </div>
         ) : (

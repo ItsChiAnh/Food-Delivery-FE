@@ -114,39 +114,73 @@
   }
 }
 
-
 .user-menu {
   position: relative;
   display: inline-block;
+}
+
+.user-name {
   cursor: pointer;
-}
-
-.user-menu span {
   font-size: 16px;
-  color: #333;
-  transition: opacity 0.3s ease-in-out;
+  color: #49557e;
+  transition: color 0.3s;
 }
 
-.user-menu .logout-button {
-  background-color: transparent;
+.user-name:hover {
+  color: tomato;
+  /* Highlight username on hover */
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+.logout-button {
+  width: 100%;
+  background: none;
   border: none;
-  color: #333;
+  color: #49557e;
   font-size: 16px;
+  text-align: left;
+  padding: 10px 15px;
   cursor: pointer;
-  transition: opacity 0.3s ease-in-out;
+  transition: background 0.3s, color 0.3s;
 }
 
-.user-menu .logout-button:hover {
-  color: #ff0000;
-  /* Màu đỏ khi hover */
+.logout-button:hover {
+  background: #fff4f2;
+  /* Light tomato background */
+  color: tomato;
 }
 
-.user-menu:hover span {
-  opacity: 0;
-  /* Ẩn chữ "Hi, [Tên]" khi hover */
+@media (max-width: 750px) {
+  .dropdown-menu {
+    right: auto;
+    left: 0;
+    /* Adjust position for smaller screens */
+    width: 150px;
+  }
+}
+.dropdown-item {
+  padding: 10px;
+  display: block;
+  text-decoration: none;
+  color: #000;
 }
 
-.user-menu:hover .logout-button {
-  opacity: 1;
-  /* Hiện nút Logout khi hover */
+.dropdown-item:hover {
+  background-color: #f0f0f0;
 }

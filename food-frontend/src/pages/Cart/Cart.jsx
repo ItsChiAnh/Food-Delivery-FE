@@ -1,11 +1,6 @@
-// 1. Thư viện bên ngoài
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-
-// 2. Module cục bộ
 import { StoreContext } from "../../context/StoreContext";
-
-// 3. File CSS và asset
 import "./Cart.css";
 
 function Cart() {
@@ -13,24 +8,14 @@ function Cart() {
     cartItems,
     food_list,
     getTotalCartAmount,
-    updateQuantity,
-    AddUserCart,
-    removeUserCart,
+    addToCart,
+    removeFromCart,
   } = useContext(StoreContext);
+
   const navigate = useNavigate();
-  const userToken = JSON.parse(localStorage.getItem("user"));
-  console.log("userToken", userToken);
+  const userToken = localStorage.getItem("access_token"); // Retrieve the token
+
   const SHIPPING_FEE = 2;
-
-  const handleRemoveItem = (itemId) => {
-    updateQuantity(itemId, 0); // Remove item by setting quantity to 0
-  };
-
-  const handleUpdateQuantity = (itemId, newQuantity) => {
-    if (newQuantity >= 0) {
-      updateQuantity(itemId, newQuantity); // Update item quantity
-    }
-  };
 
   return (
     <div className="cart">
@@ -59,33 +44,16 @@ function Cart() {
                     <button className="action-button">Actions ▼</button>
                     <div className="action-menu">
                       <button
-                        onClick={() =>
-                          AddUserCart(
-                            userToken,
-                            item._id,
-                            cartItems[item._id] + 1
-                          )
-                        }
+                        onClick={() => addToCart(item._id)}
+                        className="add-button"
                       >
-                        + Increase Quantity
+                        + Add
                       </button>
-                      {/* <button
-                        onClick={() =>
-                          AddUserCart(
-                            userToken,
-                            item._id,
-                            cartItems[item._id] - 1
-                          )
-                        }
-                        disabled={cartItems[item._id] <= 1}
-                      >
-                        - Decrease Quantity
-                      </button> */}
                       <button
+                        onClick={() => removeFromCart(item._id)}
                         className="delete-button"
-                        onClick={() => removeUserCart(userToken, item._id)}
                       >
-                        Remove Item
+                        - Remove
                       </button>
                     </div>
                   </div>
@@ -94,6 +62,7 @@ function Cart() {
               </div>
             );
           }
+          return null;
         })}
       </div>
       <div className="cart-bottom">
@@ -120,7 +89,15 @@ function Cart() {
               </b>
             </div>
           </div>
-          <button onClick={() => navigate("/order")}>
+          <button
+            onClick={() => {
+              if (!userToken) {
+                alert("Please log in to proceed to checkout.");
+                return;
+              }
+              navigate("/order");
+            }}
+          >
             PROCEED TO CHECKOUT
           </button>
         </div>
