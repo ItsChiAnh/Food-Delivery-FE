@@ -45,13 +45,31 @@ const StoreContextProvider = (props) => {
   //   setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
   // };
   const removeFromCart = async (itemId) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
+    if (!cartItems[itemId] || cartItems[itemId] <= 0) {
+      console.warn("Item not in cart or quantity is already zero.");
+      return;
+    }
+    setCartItems((prev) => {
+      const updatedCart = { ...prev };
+      if (updatedCart[itemId] === 1) {
+        delete updatedCart[itemId];
+      } else {
+        updatedCart[itemId] -= 1;
+      }
+      return updatedCart;
+    });
+
     if (token) {
-      await axios.post(
-        url + "/api/cart/remove",
-        { itemId },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      try {
+        const response = await axios.post(
+          url + "/api/cart/remove",
+          { itemId },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        console.log("Cart updated after removal: ", response.data);
+      } catch (error) {
+        console.error("Error removing item from cart: ", error);
+      }
     }
   };
 
