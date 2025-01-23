@@ -16,50 +16,62 @@ function Cart() {
     updateQuantity,
     AddUserCart,
     removeUserCart,
+    addToCart,
+    removeFromCart,
   } = useContext(StoreContext);
   const navigate = useNavigate();
 
   // Retrieve the token
-  const userToken = localStorage.getItem("accessToken");
-  if (!userToken) {
-    console.error("No user token found. Cannot perform cart actions.");
-  }
-  console.log("userToken", userToken);
+  const userToken = localStorage.getItem("access_token");
+  // if (!userToken) {
+  //   console.error("No user token found. Cannot perform cart actions.");
+  //   return;
+  // }
+  // console.log("userToken", userToken);
 
   const SHIPPING_FEE = 2;
 
   // Handle adding items to the cart
-  const handleAddToCart = async (itemId) => {
-    if (!userToken) {
-      alert("Please log in to add items to your cart.");
-      return;
-    }
-    try {
-      await AddUserCart(userToken, itemId, cartItems[itemId] + 1 || 1); // Increment quantity
-      console.log(`Added item ${itemId} to cart`);
-    } catch (error) {
-      console.error("Error adding item to cart:", error);
-    }
-  };
+  // const handleAddToCart = async (itemId) => {
+  //   if (!userToken) {
+  //     alert("Please log in to add items to your cart.");
+  //     return;
+  //   }
+  //   try {
+  //     await AddUserCart(userToken, itemId, cartItems[itemId] + 1 || 1); // Increment quantity
+  //     console.log(`Added item ${itemId} to cart`);
+  //   } catch (error) {
+  //     console.error("Error adding item to cart:", error);
+  //   }
+  // };
+
+  // const handleAddtoCart = async (itemId) => {
+  //   try {
+  //     await addToCart(itemId);
+  //     console.log(`Added item ${itemId} to cart`);
+  //   } catch (error) {
+  //     console.error("error adding: ", error);
+  //   }
+  // };
 
   // Handle removing items from the cart
-  const handleRemoveFromCart = async (itemId) => {
-    if (!userToken) {
-      alert("Please log in to remove items from your cart.");
-      return;
-    }
-    try {
-      const newQuantity = cartItems[itemId] - 1;
-      if (newQuantity > 0) {
-        await AddUserCart(userToken, itemId, newQuantity); // Decrement quantity
-      } else {
-        await removeUserCart(userToken, itemId); // Remove item if quantity is 0
-      }
-      console.log(`Removed item ${itemId} from cart`);
-    } catch (error) {
-      console.error("Error removing item from cart:", error);
-    }
-  };
+  // const handleRemoveFromCart = async (itemId) => {
+  //   if (!userToken) {
+  //     alert("Please log in to remove items from your cart.");
+  //     return;
+  //   }
+  //   try {
+  //     const newQuantity = cartItems[itemId] - 1;
+  //     if (newQuantity > 0) {
+  //       await AddUserCart(userToken, itemId, newQuantity); // Decrement quantity
+  //     } else {
+  //       await removeUserCart(userToken, itemId); // Remove item if quantity is 0
+  //     }
+  //     console.log(`Removed item ${itemId} from cart`);
+  //   } catch (error) {
+  //     console.error("Error removing item from cart:", error);
+  //   }
+  // };
 
   return (
     <div className="cart">
@@ -86,14 +98,14 @@ function Cart() {
                   <p>${item.price * cartItems[item._id]}</p>
                   <div className="actions-dropdown">
                     <button
-                      onClick={() => handleAddToCart(item._id)}
+                      onClick={() => addToCart(item._id)}
                       className="action-button"
                     >
                       + Add
                     </button>
                     <button
-                      onClick={() => handleRemoveFromCart(item._id)}
-                      className="delete-button"
+                      onClick={() => removeFromCart(item._id)}
+                      className="action-button"
                     >
                       - Remove
                     </button>

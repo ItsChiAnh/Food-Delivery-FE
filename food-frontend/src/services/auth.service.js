@@ -18,8 +18,7 @@ class AuthService {
       cartData,
     });
   }
-  
-  
+
   // Đăng nhập
   async login(email, password) {
     try {
@@ -29,12 +28,14 @@ class AuthService {
       if (response.data.tokens.access_token) {
         // Lưu access token và thông tin người dùng vào localStorage
         TokenService.setUser(response.data.tokens.access_token);
+        console.log("access token stored: ", response.data.tokens.access_token);
         localStorage.setItem(
           "userInfo",
           JSON.stringify(response.data.userinfo)
         );
-        // console.log(localStorage.getItem("tokens"));
+        const savedToken = localStorage.getItem("access_token");
         console.log("User Info and Token saved to localStorage");
+        console.log("access Token from localStorage: ", savedToken);
       }
 
       return response.data;

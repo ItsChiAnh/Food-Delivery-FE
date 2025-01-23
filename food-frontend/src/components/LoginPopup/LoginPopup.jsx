@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./LoginPopup.css";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/slices/userSlice";
@@ -7,6 +7,7 @@ import UserService from "../../services/user.service";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { StoreContext } from "../../context/StoreContext";
 
 const LoginPopup = ({ setShowLogin }) => {
   const [currState, setCurrState] = useState("Login");
@@ -19,6 +20,9 @@ const LoginPopup = ({ setShowLogin }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const dispatch = useDispatch();
+
+  //fix
+  const { setToken } = useContext(StoreContext);
 
   // Xử lý đăng nhập
   const handleLogin = async (e) => {
@@ -33,9 +37,12 @@ const LoginPopup = ({ setShowLogin }) => {
       toast.success("Đăng nhập thành công!");
 
       // Lưu thông tin vào localStorage và Redux
-      localStorage.setItem("accessToken", response.tokens.access_token);
-      localStorage.setItem("userInfo", JSON.stringify(response.userinfo));
+      // localStorage.setItem("accessToken", response.tokens.access_token);
+      // localStorage.setItem("userInfo", JSON.stringify(response.userinfo));
       dispatch(setUser(response.userinfo));
+      //fix
+      const token = response.tokens.access_token;
+      setToken(token);
 
       setShowLogin(false); // Đóng popup
     } catch (error) {
