@@ -97,7 +97,7 @@
   cursor: pointer;
 }
 
-/* responsive */
+/* Responsive adjustments */
 @media (max-width: 750px) {
   .cart-bottom {
     flex-direction: column-reverse;
@@ -108,12 +108,10 @@
   }
 }
 
-/* phan dropdown menu */
-/* phan dropdown menu */
+/* Dropdown Menu */
 .actions-dropdown {
   position: relative;
   display: inline-block;
-  font-family: Arial, sans-serif;
 }
 
 .action-button {
@@ -144,7 +142,6 @@
   z-index: 1000;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   padding: 5px 0;
-  margin-top: 5px;
   text-align: left;
 }
 
@@ -178,7 +175,7 @@
   display: block;
 }
 
-/* Add smooth animations */
+/* Smooth animations */
 .action-menu {
   opacity: 0;
   transform: translateY(-10px);

@@ -110,10 +110,20 @@ const LoginPopup = ({ setShowLogin }) => {
       );
     }
   };
-
+  function checkSubmit(e) {
+    if (e && e.keyCode == 13) {
+      document.forms[0].submit();
+    }
+  }
   return (
     <div className="login-popup">
-      <form className="login-popup-container">
+      <form
+        className="login-popup-container"
+        onSubmit={(e) => {
+          e.preventDefault(); // Prevent form submission
+        }}
+        onKeyPress={checkSubmit()}
+      >
         <div className="login-popup-title">
           <h2>{currState}</h2>
           <button onClick={() => setShowLogin(false)} className="close-button">
@@ -139,7 +149,7 @@ const LoginPopup = ({ setShowLogin }) => {
                   required
                 />
                 <span onClick={() => setShowPassword(!showPassword)}>
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  {showPassword ? <FaEye /> : <FaEyeSlash />}
                 </span>
               </div>
               <button onClick={handleLogin}>Login</button>
@@ -181,7 +191,7 @@ const LoginPopup = ({ setShowLogin }) => {
                   required
                 />
                 <span onClick={() => setShowPassword(!showPassword)}>
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  {showPassword ? <FaEye /> : <FaEyeSlash />}
                 </span>
               </div>
               <button onClick={handleSignUp}>Sign Up</button>
@@ -227,7 +237,7 @@ const LoginPopup = ({ setShowLogin }) => {
                   required
                 />
                 <span onClick={() => setShowPassword(!showPassword)}>
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  {showPassword ? <FaEye /> : <FaEyeSlash />}
                 </span>
               </div>
               <div className="password-container">
@@ -241,7 +251,7 @@ const LoginPopup = ({ setShowLogin }) => {
                 <span
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
-                  {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                  {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
                 </span>
               </div>
               <button onClick={handleResetPassword}>Confirm</button>
