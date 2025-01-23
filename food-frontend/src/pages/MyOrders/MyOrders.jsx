@@ -9,10 +9,13 @@ const MyOrders = () => {
   const [data, setData] = useState([]);
 
   const fetchOrder = async () => {
+    console.log("token in fetch Order: ", token);
     const response = await axios.post(
-      url + "api/order/userorders",
+      `${url}/api/order/userorders`,
       {},
-      { headers: { token } }
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
     );
     setData(response.data.data);
   };
