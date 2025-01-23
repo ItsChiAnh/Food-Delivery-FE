@@ -105,7 +105,7 @@ function Cart() {
                     </button>
                     <button
                       onClick={() => removeFromCart(item._id)}
-                      className="delete-button"
+                      className="action-button"
                     >
                       - Remove
                     </button>

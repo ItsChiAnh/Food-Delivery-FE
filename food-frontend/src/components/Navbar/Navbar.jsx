@@ -79,6 +79,9 @@ function Navbar({ setShowLogin }) {
             </span>
             {dropdownOpen && (
               <div className="dropdown-menu">
+                <Link to="/myorders" className="dropdown-item">
+                  My Orders
+                </Link>
                 <button className="logout-button" onClick={handleLogout}>
                   Logout
                 </button>

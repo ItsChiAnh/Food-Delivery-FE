@@ -23,11 +23,6 @@ const StoreContextProvider = (props) => {
       setCartItems((prev) => ({ ...prev, [itemId]: (prev[itemId] || 0) + 1 }));
     }
     if (token) {
-      // await axios.post(
-      //   url + "/api/cart/add",
-      //   { itemId },
-      //   { headers: { Authorization: `Bearer ${token}` } }
-      // );
       try {
         const response = await axios.post(
           url + "/api/cart/add",
@@ -41,9 +36,6 @@ const StoreContextProvider = (props) => {
     }
   };
 
-  // const removeFromCart = (itemId) => {
-  //   setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
-  // };
   const removeFromCart = async (itemId) => {
     if (!cartItems[itemId] || cartItems[itemId] <= 0) {
       console.warn("Item not in cart or quantity is already zero.");
@@ -81,7 +73,6 @@ const StoreContextProvider = (props) => {
     setCartItems((prev) => {
       const updatedCart = { ...prev };
       if (quantity === 0) {
-        // Remove the item if quantity is set to 0
         delete updatedCart[itemId];
       } else {
         updatedCart[itemId] = quantity;
@@ -124,7 +115,6 @@ const StoreContextProvider = (props) => {
         );
         console.log("Cart data fetched:", response.data.cartData);
 
-        // Map backend cartData to the frontend cartItems format
         const cart = response.data.cartData || {};
         setCartItems(cart); // Set cart items in state
       } catch (error) {
@@ -167,8 +157,6 @@ const StoreContextProvider = (props) => {
           return { ...response.data.cartData };
         });
       }
-
-      // setCartItems(response.data.cartData);
     } catch (error) {
       console.error("Error fetching cart data:", error);
     }
@@ -230,8 +218,6 @@ const StoreContextProvider = (props) => {
           },
         }
       );
-
-      // setCartItems(response); // Gắn giỏ hàng lấy được vào state
       await fetchUserCart(userToken);
 
       console.log("remove", response);
