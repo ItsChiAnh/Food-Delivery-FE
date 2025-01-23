@@ -51,11 +51,17 @@ const LoginPopup = ({ setShowLogin }) => {
   };
 
   // Xử lý đăng ký
+  // Xử lý đăng ký
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      if (!name || !email || !password) {
+      if (!name || !email || !password || !confirmPassword) {
         toast.warn("Vui lòng điền đầy đủ thông tin!");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        toast.error("Mật khẩu và Xác nhận mật khẩu không khớp!");
         return;
       }
 
@@ -192,6 +198,20 @@ const LoginPopup = ({ setShowLogin }) => {
                 />
                 <span onClick={() => setShowPassword(!showPassword)}>
                   {showPassword ? <FaEye /> : <FaEyeSlash />}
+                </span>
+              </div>
+              <div className="password-container">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm Password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+                <span
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
                 </span>
               </div>
               <button onClick={handleSignUp}>Sign Up</button>

@@ -5,7 +5,7 @@ import "../Navbar/Navbar.css";
 import { assets } from "../../assets/assets";
 import { Link, useNavigate } from "react-router-dom"; // For navigation
 import { StoreContext } from "../../context/StoreContext";
-
+import { toast } from "react-toastify";
 function Navbar({ setShowLogin }) {
   const [menu, setMenu] = useState("menu");
   const [dropdownOpen, setDropdownOpen] = useState(false); // Dropdown state
@@ -17,7 +17,7 @@ function Navbar({ setShowLogin }) {
   // Handle logout
   const handleLogout = () => {
     dispatch(logout()); // Clear Redux state
-    alert("Đăng xuất thành công!");
+    toast.success("Đăng xuất thành công!");
     navigate("/"); // Navigate to the homepage
   };
 
