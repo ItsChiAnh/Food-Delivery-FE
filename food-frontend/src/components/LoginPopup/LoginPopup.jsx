@@ -128,7 +128,7 @@ const LoginPopup = ({ setShowLogin }) => {
         onSubmit={(e) => {
           e.preventDefault(); // Prevent form submission
         }}
-        onKeyPress={checkSubmit()}
+        onkeypress={checkSubmit()}
       >
         <div className="login-popup-title">
           <h2>{currState}</h2>
